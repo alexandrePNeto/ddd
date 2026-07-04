@@ -7,7 +7,7 @@ class Usuario:
         self.id = None
         self.nome = None
         self.status = None
-        self.emprestimo = None
+        self.emprestimos = None
 
     def criar(self) -> "Usuario":
         pass

@@ -2,28 +2,30 @@ from domain.emprestimo.emprestimo import Emprestimo
 
 from domain.emprestimo.value_object.status_emprestimo import StatusEmprestimo
 
+from domain.emprestimo.policy.emprestimo import EmprestimoPolicy
+
+from domain.exception import DomainException
+
 class PodeRealizarEmprestimoSpecification:
 
-    LIMITE_EMPRESTIMOS: int = 1
-
     @classmethod
-    def pode_realizar_emprestimo(cls, emprestimo: Emprestimo) -> bool:
+    def satisfaz(cls, emprestimo: Emprestimo) -> bool:
         if not emprestimo or not isinstance(emprestimo, Emprestimo):
-            raise ValueError("Empréstimo inválido.")
+            raise DomainException("Empréstimo inválido.")
 
         if emprestimo.status != StatusEmprestimo.ABERTO:
             return False
 
-        if emprestimo.usuario.status.BLOQUEADO:
+        if not emprestimo.usuario.pode_realizar_emprestimo():
             return False
 
-        if emprestimo.usuario.status.COM_PENDENCIA:
+        if len(emprestimo.usuario.emprestimos) > EmprestimoPolicy.limite_emprestimos():
             return False
 
-        if len(emprestimo.usuario.emprestimo) >= cls.LIMITE_EMPRESTIMOS:
+        if not emprestimo.livro.esta_disponivel():
             return False
 
-        if not emprestimo.livro.status.ESTA_DISPONIVEL:
+        if emprestimo.periodo.esta_atrasado():
             return False
 
         return True

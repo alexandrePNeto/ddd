@@ -28,20 +28,11 @@ class EmprestimoFactory:
         if not livro or not isinstance(livro, Livro):
             raise DomainException("Livro inválido para empréstimo.")
 
-        if not livro.esta_disponivel():
-            raise DomainException("Livro não está disponível para empréstimo.")
-
         if not usuario or not isinstance(usuario, Usuario):
             raise DomainException("Usuário inválido para empréstimo.")
 
-        if not usuario.pode_realizar_emprestimo():
-            raise DomainException("Usuário não pode realizar empréstimo.")
-
         if not periodo or not isinstance(periodo, PeriodoEmprestimo):
             raise DomainException("Período de empréstimo inválido.")
-
-        if periodo.esta_atrasado():
-            raise DomainException("Período de empréstimo já esta atrasado.")
 
         emprestimo: Emprestimo = Emprestimo()
 
@@ -52,7 +43,7 @@ class EmprestimoFactory:
         emprestimo.status = StatusEmprestimo.ABERTO
         emprestimo.multa = None
 
-        if not PodeRealizarEmprestimoSpecification.pode_realizar_emprestimo(emprestimo):
+        if not PodeRealizarEmprestimoSpecification.satisfaz(emprestimo):
             raise DomainException("Não é possível realizar o empréstimo.")
 
         return emprestimo
