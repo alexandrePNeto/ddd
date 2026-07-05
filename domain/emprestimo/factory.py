@@ -1,4 +1,7 @@
-from uuid import uuid4
+from uuid import (
+    uuid4,
+    UUID
+)
 
 # Value Objects
 from domain.emprestimo.value_object.periodo_emprestimo import PeriodoEmprestimo
@@ -34,14 +37,13 @@ class EmprestimoFactory:
         if not periodo or not isinstance(periodo, PeriodoEmprestimo):
             raise DomainException("Período de empréstimo inválido.")
 
-        emprestimo: Emprestimo = Emprestimo()
-
-        emprestimo.id = cls._gerar_id()
-        emprestimo.livro = livro
-        emprestimo.usuario = usuario
-        emprestimo.periodo = periodo
-        emprestimo.status = StatusEmprestimo.ABERTO
-        emprestimo.multa = None
+        emprestimo: Emprestimo = Emprestimo.criar(
+            id=cls._gerar_id(),
+            livro=livro,
+            usuario=usuario,
+            periodo=periodo,
+            status=StatusEmprestimo.ABERTO
+        )
 
         if not PodeRealizarEmprestimoSpecification.satisfaz(emprestimo):
             raise DomainException("Não é possível realizar o empréstimo.")
@@ -49,5 +51,5 @@ class EmprestimoFactory:
         return emprestimo
 
     @classmethod
-    def _gerar_id(cls) -> str:
-        return str(uuid4())
+    def _gerar_id(cls) -> UUID:
+        return uuid4()

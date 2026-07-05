@@ -1,3 +1,8 @@
+from uuid import (
+    SafeUUID,
+    UUID
+)
+
 # Value Objects
 from domain.emprestimo.value_object.periodo_emprestimo import PeriodoEmprestimo
 from domain.emprestimo.value_object.status_emprestimo import StatusEmprestimo
@@ -19,10 +24,44 @@ class Emprestimo:
     def __init__(self):
         self.id: int = None
         self.livro: Livro = None
+        self.multa: Multa  = None
         self.usuario: Usuario = None
-        self.multa: Multa | None = None
         self.status: StatusEmprestimo = None
-        self.periodo: PeriodoEmprestimo | None = None
+        self.periodo: PeriodoEmprestimo = None
+
+    @classmethod
+    def criar(
+        cls,
+        id: UUID,
+        livro: Livro,
+        usuario: Usuario,
+        status: StatusEmprestimo,
+        periodo: PeriodoEmprestimo
+    ) -> "Emprestimo":
+        if not id or not isinstance(id, UUID) or id.is_safe != SafeUUID.safe:
+            raise DomainException("ID é inválido para processeguir")
+
+        if not livro or not isinstance(livro, Livro):
+            raise DomainException("Livro deve ser válido para iniciar um empréstimo")
+
+        if not usuario or not isinstance(usuario, Usuario):
+            raise DomainException("Usuario deve ser válido para iniciar um empréstimo")
+
+        if not status or not isinstance(status, StatusEmprestimo):
+            raise DomainException("Status de emprestimo deve ser válido para iniciar um empréstimo")
+
+        if not periodo or not isinstance(periodo, PeriodoEmprestimo):
+            raise DomainException("Periodo de emprestimo deve ser válido para iniciar um empréstimo")
+
+        emprestimo: "Emprestimo" = cls()
+
+        emprestimo.livro = livro
+        emprestimo.usuario = usuario
+        emprestimo.status = status
+        emprestimo.periodo = periodo
+        emprestimo.multa = Multa.criar(0, "")
+
+        return emprestimo
 
     def atualizar_status(self) -> None:
         if self.status == StatusEmprestimo.FINALIZADO:
