@@ -19,3 +19,12 @@ class Multa:
         multa.motivo = motivo
 
         return multa
+
+    @classmethod
+    def sem_multa(cls) -> "Multa":
+        multa: "Multa" = cls()
+
+        multa.valor = 0.0
+        multa.motivo = ""
+
+        return multa

@@ -1,24 +1,16 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
+from domain.livro.livro import Livro
 from domain.emprestimo.emprestimo import Emprestimo
 
+from domain.repository import Repository
 
-class EmprestimoRepository(ABC):
-    @abstractmethod
-    def salvar(self, emprestimo: Emprestimo) -> None:
-        pass
 
+class EmprestimoRepository(Repository[Emprestimo]):
 
     @abstractmethod
-    def buscar(self, emprestimo: Emprestimo) -> Emprestimo | None:
-        pass
-
-
-    @abstractmethod
-    def atualizar(self, emprestimo: Emprestimo) -> None:
-        pass
-
-
-    @abstractmethod
-    def deletar(self, emprestimo: Emprestimo) -> None:
+    def buscar_emprestimos_ativos_por_livro(
+        self,
+        livro: Livro
+    ) -> list[Emprestimo]:
         pass

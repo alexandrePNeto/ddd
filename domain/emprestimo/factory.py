@@ -28,14 +28,6 @@ class EmprestimoFactory:
         usuario: Usuario,
         periodo: PeriodoEmprestimo
     ) -> "Emprestimo":
-        if not livro or not isinstance(livro, Livro):
-            raise DomainException("Livro inválido para empréstimo.")
-
-        if not usuario or not isinstance(usuario, Usuario):
-            raise DomainException("Usuário inválido para empréstimo.")
-
-        if not periodo or not isinstance(periodo, PeriodoEmprestimo):
-            raise DomainException("Período de empréstimo inválido.")
 
         emprestimo: Emprestimo = Emprestimo.criar(
             id=cls._gerar_id(),

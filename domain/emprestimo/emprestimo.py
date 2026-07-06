@@ -1,7 +1,4 @@
-from uuid import (
-    SafeUUID,
-    UUID
-)
+from uuid import UUID
 
 # Value Objects
 from domain.emprestimo.value_object.periodo_emprestimo import PeriodoEmprestimo
@@ -22,7 +19,7 @@ from domain.emprestimo.policy.multa import MultaPolicy
 class Emprestimo:
 
     def __init__(self):
-        self.id: int = None
+        self.id: UUID = None
         self.livro: Livro = None
         self.multa: Multa  = None
         self.usuario: Usuario = None
@@ -38,7 +35,7 @@ class Emprestimo:
         status: StatusEmprestimo,
         periodo: PeriodoEmprestimo
     ) -> "Emprestimo":
-        if not id or not isinstance(id, UUID) or id.is_safe != SafeUUID.safe:
+        if not id or not isinstance(id, UUID):
             raise DomainException("ID é inválido para processeguir")
 
         if not livro or not isinstance(livro, Livro):
@@ -55,11 +52,12 @@ class Emprestimo:
 
         emprestimo: "Emprestimo" = cls()
 
+        emprestimo.id = id
         emprestimo.livro = livro
         emprestimo.usuario = usuario
         emprestimo.status = status
         emprestimo.periodo = periodo
-        emprestimo.multa = Multa.criar(0, "")
+        emprestimo.multa = Multa.sem_multa()
 
         return emprestimo
 
