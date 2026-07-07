@@ -76,6 +76,8 @@ class Emprestimo:
             self.atrasar_emprestimo()
             return
 
+        self.livro.devolver()
+
         self.status = self.status.atualizar(self.status, StatusEmprestimo.FINALIZADO)
 
     def atrasar_emprestimo(self) -> None:
