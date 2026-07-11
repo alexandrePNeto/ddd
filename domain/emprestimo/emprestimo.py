@@ -74,7 +74,6 @@ class Emprestimo:
 
         if self.esta_atrasado():
             self.atrasar_emprestimo()
-            return
 
         self.livro.devolver()
 
